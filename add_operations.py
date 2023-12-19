@@ -61,9 +61,7 @@ def create_output_if_not_exists():
             catswriter.writerow(["Libelle", "Catégorie", "Débit", "Crédit", "Référence"])
 
 # confirmer l'association d'une catégorie à une opération
-def confirm (libelle, ref,debit, credit, cat, cats):
-    
-    cat = cat.isdigit() and cats[int(cat)-1] or cat
+def confirm (libelle, ref,debit, credit, cat):
     cat = cat.upper()
 
     print("Êtes-vous sur de vouloir associer l'opération \033[4m\033[1m" + libelle + "\033[0m à la catégorie \033[4m\033[1m" + cat + "\033[0m ? (y/n)")
@@ -150,6 +148,7 @@ def modify_cat(cat):
     
 def printCatsInColumns(categories, nbColumns):
     local_cats = categories.copy()
+    local_cats.sort()
     if ADD_CAT_SIGN in local_cats:
         local_cats.remove(ADD_CAT_SIGN)
     if MODIFY_CAT_SIGN in local_cats:
@@ -212,8 +211,6 @@ def main_process():
                         categorie = item[1]
                         break
 
-                
-
                 if libelle_trouve:
                     if ASK_BEFORE_WRITE_ALREADY_EXISTING_LIBELLE:
                         print(f"Cette opération a déjà été catégorisée. Voulez-vous lui assigner la même catégorie ? (\033[4m\033[1m" + categorie + "\033[0m) (y/n)")
@@ -231,7 +228,7 @@ def main_process():
                         continue
                 
                 nbColumns = 1
-                while ((len(cats) + 2) / nbColumns > MAX_NB_LINES):
+                while ((len(cats) + 3) / nbColumns > MAX_NB_LINES):
                     nbColumns += 1
                 printCatsInColumns(cats, nbColumns)
 
@@ -258,20 +255,20 @@ def main_process():
                             continue
                         is_modified = modify_cat(to_modify)
                     continue
-                elif not cat.isdigit() or int(cat) > len(cats) or int(cat) < 1:
-                    formatted_text = f"{RED}Cette catégorie n'est pas valide pour l'opération {BOLD}{UNDERLINE}{libelle}{RESET}{RED} (30/11/2023){RESET}"
-                    print(formatted_text)
+                elif cat.isdigit() and int(cat) <= len(cats) and int(cat) > 0:
+                    cat = cats[int(cat)-1]
+                else:
+                    print(f"{RED}Cette catégorie n'est pas valide pour l'opération {BOLD}{UNDERLINE}{libelle}{RESET}{RED} (30/11/2023){RESET}")
                     continue
                 
-                confirmed = confirm(libelle, ref,debit, credit, cat, cats)
+                confirmed = confirm(libelle, ref,debit, credit, cat)
                 
 def init_filenames():
     global output_filename
     global source_filename
     source_filename = ask_file()
     output_filename = OUTPUT_BEGIN_WITH + source_filename[0:-4] + ".csv"
-
-    
+ 
 if __name__ == "__main__":
     init_filenames()
     setup_lists()
