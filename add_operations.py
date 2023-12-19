@@ -1,7 +1,6 @@
 # lecteur csv et affichage des données
 
 import csv
-import matplotlib.pyplot as plt
 import os
 
 
