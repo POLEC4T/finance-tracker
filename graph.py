@@ -3,8 +3,11 @@ import matplotlib.pyplot as plt
 import os
 
 # operations_data_og.csv
-CSV_FOLDER = "datas"
-OUTPUT_BEGIN_WITH = "operations_"
+
+from config import config
+
+OUTPUT_BEGIN_WITH = config["output_begin_with"]
+CSV_FOLDER = config["csv_folder"]
 
 def ask_file():
     print("Quel tableaux de compte voulez-vous lire (.csv) ?")
