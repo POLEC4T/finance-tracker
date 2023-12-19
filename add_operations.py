@@ -117,7 +117,10 @@ def modify_cat(cat):
         if cats[i] == cat:
             cats[i] = new_cat
             break
+    
     print(f"{GREEN}Catégorie modifiée !{RESET}")
+    print()
+    print("------------------------")
     return True
     
 def printCatsInColumns(categories, nbColumns):
