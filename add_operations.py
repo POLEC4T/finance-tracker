@@ -95,15 +95,14 @@ def ask_file():
     print("Quel tableaux de compte voulez-vous renseigner (.csv) ?")
     file = input(">>> ")
     if file[-4:] != ".csv":
-        print("Ce fichier n'est pas un tableur. Veuillez renseigner un fichier .csv")
+        print(f"Ce fichier {RED}n'est pas un tableur.{RESET} Veuillez renseigner un fichier .csv")
         file = ask_file()
     try :
         open(os.path.join(CSV_FOLDER,file), mode='r', encoding='utf-8', )
     except FileNotFoundError:
-        print("Ce fichier n'existe pas. Veuillez renseigner un fichier .csv")
+        print(f"Ce fichier {RED}n'existe pas.{RESET} Veuillez renseigner un fichier .csv")
         file = ask_file()
     return file
-
 
 # modifie le nom de la catégorie dans tous les fichiers, 
 def modify_cat(cat):
@@ -148,7 +147,6 @@ def modify_cat(cat):
     
 def printCatsInColumns(categories, nbColumns):
     local_cats = categories.copy()
-    local_cats.sort()
     if ADD_CAT_SIGN in local_cats:
         local_cats.remove(ADD_CAT_SIGN)
     if MODIFY_CAT_SIGN in local_cats:
@@ -185,9 +183,10 @@ def main_process():
     global libellesAlreadyCategorized
     global opsDone
     global source_filename
+
+    
     with open(os.path.join(CSV_FOLDER,source_filename), newline='', encoding='utf-8') as file_to_read:
         spamreader = csv.reader(file_to_read, delimiter=CSV_DELIMITER, quotechar='|')        
-
         for row in spamreader:
             libelle = row[1]
             ref = row[3]
@@ -200,6 +199,7 @@ def main_process():
             confirmed = False
             
             while not confirmed:
+                cats.sort()
                 print("\n------------------------")
                 print("Quelle est la catégorie de l'opération \033[4m\033[1m" + libelle + "\033[0m (" + row[0] + ") ?")
 
